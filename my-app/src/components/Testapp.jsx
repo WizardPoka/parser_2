@@ -1,23 +1,21 @@
-// =================================================================================================
-// Обыкновенные импорты
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
-// =================================================================================================
-// 
-function App() {
+function Testapp() {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [groupSchedule, setGroupSchedule] = useState([]);
-
-// =================================================================================================
 
   useEffect(() => {
     const fetchGroups = async () => {
       try {
         const response = await axios.get('http://localhost:5000/get_groups');
         setGroups(response.data);
+        // Выберем первые три группы (если они есть)
+        if (response.data.length > 2) {
+          setSelectedGroup(response.data[0]);
+          fetchGroupSchedule(response.data[0]);
+        }
       } catch (error) {
         console.error('Error fetching groups:', error);
       }
@@ -31,21 +29,24 @@ function App() {
 const fetchGroupSchedule = async (groupName) => {
   try {
     const response = await axios.post('http://localhost:5000/get_schedule', { group_name: groupName });
-    const ways = response.data
-    setGroupSchedule(Array.isArray(ways) ? ways : []);
-    console.log(ways); // Строка для отладки
-  } 
-  catch (error){
+    console.log('Response data:', response.data);
+    setGroupSchedule(response.data || []);
+  } catch (error) {
     console.error('Error fetching schedule:', error);
   }
 };
 
+
+
+  
 // =================================================================================================
+
+
 
   return (
     <div>
-      
-      <section>
+
+{/* <section>
       <h1>Group Schedule</h1>
       
       
@@ -61,36 +62,40 @@ const fetchGroupSchedule = async (groupName) => {
             </p>
           </li>
         </ul>
-      </section>
+      </section> */}
 
+      <h1>Groups:</h1>
+      <ul>
+        {groups.slice(0, 3).map((group, index) => (
+          <li key={index} onClick={() => { setSelectedGroup(group); fetchGroupSchedule(group); }}>
+            {group}
+          </li>
+        ))}
+      </ul>
 
-      <section>
-
-      {selectedGroup && (
-        <ul>
-        <h2>Schedule for {selectedGroup}:</h2>
-          <li>
-            <p>
-              {groupSchedule.map((scheduleItem, index) => (
-                <li key={index}>
-                  <strong>Day:</strong> {isNaN(scheduleItem.День) ? 'No day' : scheduleItem.День}, {' '}
-                  <strong>Lesson:</strong> {scheduleItem.Урок}, {' '}
-                  <strong>Subject:</strong> {String(scheduleItem[selectedGroup]) || 'No lesson'}
+     
+  <div>
+    <h2>Schedule for {selectedGroup}:</h2>
+    <ul>
+      {groupSchedule.map((scheduleItem, index) => (
+        <li key={index} >
+          <strong>Dictionary {index + 1}:</strong>
+          <ul>
+          {Object.entries(scheduleItem).map(([key, value]) => (
+                <li key={key}>
+                  <strong>{key}:</strong> {value}
                 </li>
               ))}
-            </p>
-          </li>
-        </ul>
-      
-        )}
-                
-      </section>
+            </ul>
+        </li>
+      ))}
+    </ul>
+  </div>
+
     </div>
   );
 }
 
-// =================================================================================================
+export default Testapp;
 
-export default App;
 
-// =================================================================================================

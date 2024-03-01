@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import './Testapp.css';
 function Testapp() {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -75,22 +75,43 @@ const fetchGroupSchedule = async (groupName) => {
 
      
   <div>
-    <h2>Schedule for {selectedGroup}:</h2>
-    <ul>
-      {groupSchedule.map((scheduleItem, index) => (
-        <li key={index} >
-          <strong>Dictionary {index + 1}:</strong>
-          <ul>
-          {Object.entries(scheduleItem).map(([key, value]) => (
-                <li key={key}>
-                  <strong>{key}:</strong> {value}
-                </li>
+    <table>
+            <thead>
+              <tr>
+                <th>День</th>
+                <th>Урок</th>
+                <th>{selectedGroup}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {groupSchedule.map((scheduleItem, index) => (
+                <tr key={index}>
+                  <td>{scheduleItem['День'] || 'No data'}</td>
+                  <td>{scheduleItem['Урок'] || 'No data'}</td>
+                  <td>{scheduleItem[selectedGroup] || 'No data'}</td>
+                </tr>
               ))}
-            </ul>
-        </li>
-      ))}
-    </ul>
+            </tbody>
+          </table>
   </div>
+
+    {/* <h2>Schedule for {selectedGroup}:</h2>
+        <ul>
+          {groupSchedule.map((scheduleItem, index) => (
+            <li key={index} >
+              <strong>Dictionary {index + 1}:</strong>
+              <ul>
+              {Object.entries(scheduleItem).map(([key, value]) => (
+                    <li key={key}>
+                      <strong>{key}:</strong> {value}
+                    </li>
+                  ))}
+                </ul>
+            </li>
+          ))}
+        </ul> */}
+
+
 
     </div>
   );

@@ -55,12 +55,14 @@ function Testapp() {
   const renderScheduleBlocks = () => {
     let currentDay = null;
     let scheduleBlocks = [];
-
+  
     groupSchedule.forEach((scheduleItem, index) => {
       if (currentDay !== scheduleItem.День) {
         currentDay = scheduleItem.День;
+        const daySchedule = groupSchedule.filter((item) => item.День === currentDay);
+  
         scheduleBlocks.push(
-          <div key={index} className={styles.scheduleBlock}>
+          <div key={currentDay} className={styles.scheduleBlock}>
             <h3>{currentDay}</h3>
             <table className={styles.table}>
               <thead>
@@ -70,28 +72,27 @@ function Testapp() {
                 </tr>
               </thead>
               <tbody>
-                {groupSchedule
-                  .filter((item) => item.День === currentDay)
-                  .map((filteredItem, filteredIndex) => (
-                    <tr key={filteredIndex}>
-                      <td>{filteredItem['Урок'] || 'No data'}</td>
-                      <td>{filteredItem[selectedGroup] || 'No data'}</td>
-                    </tr>
-                  ))}
+                {daySchedule.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>{item['Урок'] || 'No data'}</td>
+                    <td>{item[selectedGroup] || 'No data'}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         );
       }
     });
-
-    return scheduleBlocks;
+  
+    return scheduleBlocks.length > 0 ? scheduleBlocks : <div className={styles.scheduleBlock}>No schedule available</div>;
   };
+  
 
   return (
     <div className={styles.container}>
       <div className={styles.groupList}>
-        <h1>Groups:</h1>
+        <h1>Группы:</h1>
         <ul>
           {groups.slice(0, 13).map((group, index) => (
             <li key={index} onClick={() => { setSelectedGroup(group); fetchGroupSchedule(group); }} className={styles.listItem}>
@@ -104,7 +105,7 @@ function Testapp() {
       <div className={styles.scheduleTable}>
         {selectedGroup && (
           <div>
-            <h2>Schedule for {selectedGroup}:</h2>
+            <h2>Расписание для {selectedGroup}:</h2>
             {renderScheduleBlocks()}
           </div>
         )}

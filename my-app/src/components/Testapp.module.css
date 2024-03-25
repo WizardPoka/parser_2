@@ -50,3 +50,23 @@ th, td {
 th {
   background-color: #f2f2f2;
 }
+
+.dayCell,
+.lessonCell,
+.infoCell {
+  
+  padding: 8px; /* добавим немного отступов для лучшего визуального отображения */
+  
+}
+
+.daySpacer {
+  background-color: #f2f2f2; /* цвет фона для отступа */
+}
+
+.scheduleRow:hover {
+  background-color: #f0f0f0; /* цвет фона при наведении */
+}
+
+.ppppppp {
+  border-radius: 8px;
+}

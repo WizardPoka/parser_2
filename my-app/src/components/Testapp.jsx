@@ -51,18 +51,45 @@ function Testapp() {
       return item;
     });
   };
-  
-  
 
-  // const fetchGroupSchedule = async (groupName) => {
-  //   try {
-  //     const response = await axios.post('http://localhost:5000/get_schedule', { group_name: groupName });
-  //     console.log('Response data:', response.data);
-  //     setGroupSchedule(response.data || []);
-  //   } catch (error) {
-  //     console.error('Error fetching schedule:', error);
-  //   }
-  // };
+  const renderScheduleBlocks = () => {
+    let currentDay = null;
+    let scheduleBlocks = [];
+    let renderedDays = [];
+  
+    groupSchedule.forEach((scheduleItem, index) => {
+      if (!renderedDays.includes(scheduleItem.День)) {
+        currentDay = scheduleItem.День;
+        renderedDays.push(currentDay);
+  
+        scheduleBlocks.push(
+          <div key={index} className={styles.scheduleBlock}>
+            <h3>{currentDay}</h3>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Урок</th>
+                  <th>{selectedGroup}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groupSchedule
+                  .filter((item) => item.День === currentDay)
+                  .map((filteredItem, filteredIndex) => (
+                    <tr key={filteredIndex}>
+                      <td>{filteredItem['Урок'] || 'No data'}</td>
+                      <td>{filteredItem[selectedGroup] || 'No data'}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+    });
+  
+    return scheduleBlocks;
+  };
 
   return (
     <div className={styles.container}>
@@ -81,24 +108,7 @@ function Testapp() {
         {selectedGroup && (
           <div>
             <h2>Schedule for {selectedGroup}:</h2>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>День</th>
-                  <th>Урок</th>
-                  <th>{selectedGroup}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {groupSchedule.map((scheduleItem, index) => (
-                  <tr key={index}>
-                    <td>{scheduleItem['День'] || 'No data'}</td>
-                    <td>{scheduleItem['Урок'] || 'No data'}</td>
-                    <td>{scheduleItem[selectedGroup] || 'No data'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {renderScheduleBlocks()}
           </div>
         )}
       </div>

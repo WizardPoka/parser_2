@@ -4,9 +4,15 @@ import styles from './DaySchedule.module.css';
 
 const DaySchedule = ({ day, schedule, selectedGroup }) => {
   return (
-    <div className={`${styles.dayContainer} ${styles.roundedBlock}`}>
-      <h3>{day}</h3>
+    <div className={styles.dayContainer}>
+      <h3 className={styles.dayHeading}>{day}</h3>
       <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Lesson</th>
+            <th>{selectedGroup}</th>
+          </tr>
+        </thead>
         <tbody>
           {schedule.map((scheduleItem, index) => (
             <tr key={index}>
@@ -18,6 +24,6 @@ const DaySchedule = ({ day, schedule, selectedGroup }) => {
       </table>
     </div>
   );
-};
+}
 
 export default DaySchedule;
